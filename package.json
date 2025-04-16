@@ -1,0 +1,30 @@
+{
+  "name": "slack-reader",
+  "version": "1.0.0",
+  "description": "A browser-based viewer for Slack export data",
+  "type": "module",
+  "scripts": {
+    "dev:api": "cross-env NODE_ENV=development tsx watch --clear-screen=false src/server/index.ts",
+    "dev:web": "vite --port 5174",
+    "dev:all": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "update-workspaces": "node scripts/update-workspaces.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "emoji-datasource-apple": "^15.1.2",
+    "express": "^4.21.2",
+    "lit": "^3.1.0",
+    "tsx": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  }
+}
