@@ -39,6 +39,7 @@ interface WorkspaceInfo {
   folder: string;
   description?: string;
   export_date: string;
+  date_range?: { start: number; end: number };
 }
 
 /**
@@ -162,9 +163,7 @@ export class SlackReader extends LitElement {
     return html`
       <div class="workspace-info">
         <p class="workspace-name">Slack message viewer for ${this.workspaceInfo.name}</p>
-        ${this.workspaceInfo.description && this.workspaceInfo.description !== this.workspaceInfo.name
-          ? html`<p class="workspace-description">${this.workspaceInfo.description}</p>` 
-          : ''}
+        <p class="workspace-description">Range: ${new Date(this.workspaceInfo.date_range?.start || '').toLocaleDateString()} to ${new Date(this.workspaceInfo.date_range?.end || '').toLocaleDateString()}</p>
         <p class="workspace-export">Exported: ${new Date(this.workspaceInfo.export_date).toLocaleDateString()}</p>
       </div>
     `;
