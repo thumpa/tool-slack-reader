@@ -172,11 +172,20 @@ export class SlackReader extends LitElement {
 
   static styles = css`
     :host {
-      display: grid;
-      grid-template-rows: auto 1fr;
+      display: flex;
+      flex-direction: column;
       height: 100vh;
+      max-height: 100vh;
       color: var(--text-color);
       background-color: var(--bg-secondary);
+      overflow: hidden;
+      box-sizing: border-box;
+
+      --header-height: 5.5rem;
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
     }
 
     :host([dark]) {
@@ -204,19 +213,23 @@ export class SlackReader extends LitElement {
     }
 
     .header {
+      flex: 0 0 auto;
       display: grid;
       grid-template-columns: 1fr auto auto;
       align-items: center;
       gap: 1rem;
-      padding: 1rem;
+      padding: 1rem 1.5rem;
       background-color: var(--bg-secondary);
       border-bottom: 1px solid var(--border-color);
+      z-index: 10;
+      height: var(--header-height);
     }
 
     .workspace-info {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.25rem;
+      min-width: 0;
     }
 
     .workspace-name {
@@ -224,12 +237,18 @@ export class SlackReader extends LitElement {
       font-weight: bold;
       margin: 0;
       color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .workspace-description {
       margin: 0;
       font-size: 0.9rem;
       color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .workspace-export {
@@ -239,18 +258,28 @@ export class SlackReader extends LitElement {
     }
 
     .content {
+      flex: 1 1 auto;
       display: grid;
       grid-template-columns: 250px 1fr;
+      grid-template-rows: 1fr;
+      min-height: 0;
+      height: calc(100vh - var(--header-height));
       overflow: hidden;
     }
 
     channel-list {
       background-color: var(--bg-secondary);
       border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
     }
 
     message-list {
       background-color: var(--background-color);
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
     }
 
     .theme-switch {

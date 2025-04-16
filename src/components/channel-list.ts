@@ -16,6 +16,8 @@ export class ChannelList extends LitElement {
       display: block;
       height: 100%;
       overflow-y: auto;
+      overflow-x: hidden;
+      contain: strict;
     }
 
     .channel {

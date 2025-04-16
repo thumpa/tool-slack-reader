@@ -90,6 +90,8 @@ export class MessageList extends LitElement {
       display: block;
       height: 100%;
       overflow-y: auto;
+      overflow-x: hidden;
+      contain: strict;
       padding: 1rem;
       color: var(--text-primary);
     }
