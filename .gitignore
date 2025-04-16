@@ -30,5 +30,6 @@ yarn-error.log*
 *.sln
 *.sw?
 
-# Data directory
-public/data/
+# Data directory - exclude all except default
+public/data/*
+!public/data/default/
