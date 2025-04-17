@@ -1,0 +1,12 @@
+{
+  "channels": {
+    "channel1": {
+      "messageCount": 20,
+      "lastCounted": "2025-04-17T09:27:08.171Z"
+    },
+    "channel2": {
+      "messageCount": 4,
+      "lastCounted": "2025-04-17T09:27:08.171Z"
+    }
+  }
+}

@@ -22,6 +22,7 @@ A browser-based viewer for Slack export data, built with Lit.
 
 ## 1. Features
 
+- Multi-workspace support with easy workspace switching
 - Two-column layout with channels list and message view
 - Dark/light theme support using system preferences
 - Chronological message display with proper formatting
@@ -33,44 +34,60 @@ A browser-based viewer for Slack export data, built with Lit.
 - Timestamp formatting in UK English format
 - Support for message reactions
 - Clean sidebar with only channel folders visible
+- Persistent workspace state between sessions
+- Automatic theme switching based on system preferences
 
 ## 2. Project Structure
 
 ``` markdown
 ├── public/
 │   └── data/
-│       ├── members.csv     # User data file
-│       ├── pet-tax/        # Channel export files by date
-│       └── pitches/        # Channel export files by date
+│       ├── workspace1/        # First workspace directory
+│       │   ├── members.csv    # User data file
+│       │   ├── pet-tax/       # Channel export files by date
+│       │   └── pitches/       # Channel export files by date
+│       └── workspace2/        # Second workspace directory
+│           ├── members.csv
+│           └── channels/
 ├── src/
 │   ├── components/
-│   │   ├── channel-list.ts # Channel list component
-│   │   └── message-list.ts # Message display component
+│   │   ├── channel-list.ts    # Channel list component
+│   │   ├── message-list.ts    # Message display component
+│   │   ├── theme-switch.ts    # Theme toggling component
+│   │   └── workspace-selector.ts # Workspace selection component
 │   ├── utils/
-│   │   ├── data-loader.ts  # Channel and message loading
-│   │   └── user-service.ts # User data management
-│   └── slack-reader.ts     # Main application component
-└── index.html             # Entry point with theme variables
+│   │   ├── data-loader.ts     # Channel and message loading
+│   │   └── user-service.ts    # User data management
+│   └── slack-reader.ts        # Main application component
+└── index.html                # Entry point with theme variables
 ```
 
 ## 3. Data Structure
 
 ### 3.1. Workspace Metadata
 
-The application uses a `workspace.json` file in the `public/data/` directory to store workspace information:
+Each workspace requires a `workspace.json` file in its directory:
 
 ```json
 {
-  "tool_name": "Slack Message Viewer",
-  "workspace_name": "RenderHeads",
+  "id": "unique-workspace-id",
+  "name": "Workspace Display Name",
+  "folder": "workspace-folder-name",
+  "description": "Slack message viewer for Workspace",
   "date_range": {
     "start": "2014-04-14",
     "end": "2025-04-14"
   },
-  "description": "Slack message viewer for RenderHeads",
   "export_date": "2025-04-14"
 }
 ```
+
+The application supports multiple workspaces, each with their own:
+
+- Separate channel structure
+- Independent user data
+- Isolated message history
+- Unique workspace metadata
 
 ### 3.2. Channel Data
 
@@ -98,23 +115,23 @@ The application expects user data in a CSV format (`members.csv`) with the follo
 
 ### 4.1. Layout Structure
 
-The application follows a two-column layout design:
+The application follows a three-section layout design:
 
 ``` markdown
 +----------------+------------------+
-| Workspace Name | Message Area    |
-| Slack Channel Browser            |
-| [Date start] to [Date End]       |
+| Workspace Info | Workspace Select | Theme
+| [Description]  | [Dropdown     ▼] | [☀/☾]
+| [Date Range]   |                  |
 +----------------+------------------+
 |                |                 |
 |   Channel      |    Message      |
 |    List        |     Area        |
 |                |                 |
-|   [3dmodel]    |  shane         |
+|   [3dmodel]    |  Jane         |
 |   [pet-tax]    |  10 Oct 2017   |
 |   [pitches]    |  > Message text |
 |                |                 |
-|                |  Kelly          |
+|                |  John          |
 |                |  10 Oct 2017    |
 |                |  > Another msg  |
 |                |                 |
@@ -123,6 +140,10 @@ The application follows a two-column layout design:
 
 Key layout features:
 
+- Header section with:
+  - Workspace information display
+  - Workspace selector dropdown
+  - Theme toggle switch
 - Fixed-width sidebar (250px) for channel navigation
 - Flexible-width message area that fills remaining space
 - Scrollable message list with newest at bottom
@@ -132,22 +153,34 @@ Key layout features:
 ### 4.2. Components
 
 1. `slack-reader`: Main component providing the layout structure
-   - Grid-based two-column layout
+   - Grid-based layout with header and content areas
    - Theme variable management
+   - Workspace state management
    - Component composition
 
-2. `channel-list`: Channel navigation component
+2. `workspace-selector`: Workspace switching component
+   - Dropdown for workspace selection
+   - Handles workspace changes
+   - Updates channel list and messages
+
+3. `channel-list`: Channel navigation component
    - Displays available channels (directories only)
    - Handles channel selection
    - Visual feedback for selected state
+   - Updates based on selected workspace
 
-3. `message-list`: Message display component
+4. `message-list`: Message display component
    - Chronological message rendering
    - User name resolution for message authors
    - @mention resolution in message content
    - Timestamp formatting
    - Reaction display
    - Auto-scroll to latest message
+
+5. `theme-switch`: Theme toggle component
+   - Switches between light and dark modes
+   - Respects system preferences
+   - Persists theme selection
 
 ### 4.3. Services
 
@@ -215,43 +248,6 @@ The application uses CSS custom properties for theming:
 
 Dark mode is automatically applied based on system preferences using `@media (prefers-color-scheme: dark)`.
 
-## 5. Development
-
-1. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-2. Start all development servers:
-
-   ```bash
-   npm run dev:all
-   ```
-
-   This will start:
-   - Web server on [http://localhost:5174](http://localhost:5174)
-   - API server on [http://localhost:3001](http://localhost:3001)
-
-   Individual servers can be started with:
-   - `npm run dev:web` - Starts only the web server
-   - `npm run dev:api` - Starts only the API server
-
-3. Place your Slack export data:
-   - Create channel directories in `public/data/`
-   - Place JSON files in their respective channel directories
-   - Place `members.csv` in the `public/data/` directory
-   - Message files should be named `YYYY-MM-DD.json`
-
-4. Access the application:
-   - Open [http://localhost:5174](http://localhost:5174) in your browser
-   - Select a channel from the sidebar
-   - Messages will load and display chronologically with resolved usernames
-
-## 6. License
-
-[Add your license information here]
-
 ### 4.6. Message Formatting
 
 The application includes robust message formatting features:
@@ -282,3 +278,43 @@ The application includes robust message formatting features:
    - Graceful handling of missing or invalid data
    - Console warnings for debugging
    - Fallback display options for edge cases
+
+## 5. Development
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start all development servers:
+
+   ```bash
+   npm run dev:all
+   ```
+
+   This will start:
+   - Web server on [http://localhost:5174](http://localhost:5174)
+   - API server on [http://localhost:3001](http://localhost:3001)
+
+   Individual servers can be started with:
+   - `npm run dev:web` - Starts only the web server
+   - `npm run dev:api` - Starts only the API server
+
+3. Set up workspace data:
+   - Create workspace directories in `public/data/`
+   - Add `workspace.json` to each workspace directory
+   - Create channel directories within each workspace
+   - Place JSON files in their respective channel directories
+   - Add `members.csv` to each workspace directory
+   - Message files should be named `YYYY-MM-DD.json`
+
+4. Access the application:
+   - Open [http://localhost:5174](http://localhost:5174) in your browser
+   - Select a workspace from the dropdown
+   - Choose a channel from the sidebar
+   - Messages will load and display chronologically with resolved usernames
+
+## 6. License
+
+[Add your license information here]

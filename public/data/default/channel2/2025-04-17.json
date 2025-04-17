@@ -1,0 +1,37 @@
+[
+    {
+      "type": "message",
+      "user": "U01EXAMPLE1",
+      "text": "Whoa, it loads every publicchannel?",
+      "ts": "1744884000.000001"
+    },
+    {
+      "type": "message",
+      "user": "U01EXAMPLE2",
+      "text": "Yup, everything that was part of the export shows up."
+      ,"ts": "1744884060.000002"
+    },
+    {
+      "type": "message",
+      "user": "U01EXAMPLE3",
+      "text": "Even threads are grouped under the right messages. Super tidy.",
+      "ts": "1744884120.000003"
+    },
+    {
+      "type": "message",
+      "user": "U01EXAMPLE1",
+      "text": "Ohhh this is going to make digging through old discussions *soooo* much easier.",
+      "ts": "1744884180.000004",
+      "reactions": [
+            {
+                "name": "100",
+                "users": [
+                    "U01EXAMPLE2",
+                    "U01EXAMPLE3"
+                ],
+                "count": 2
+            }
+        ]
+    }
+  ]
+  

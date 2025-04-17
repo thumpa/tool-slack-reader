@@ -1,0 +1,191 @@
+[
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "Hey team! Just tried out the new Slack viewer, pretty slick.",
+        "ts": "1744880400.000194"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Nice! Can it handle more than one export at a time?",
+        "ts": "1744880580.000986"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "Yep, just drop multiple workspace exports into the /data/ folder. It sorts them automatically.",
+        "ts": "1744880760.000955",
+        "reactions": [
+            {
+                "name": "white_check_mark",
+                "users": [
+                    "U01EXAMPLE1",
+                    "U01EXAMPLE2"
+                ],
+                "count": 2
+            }
+        ]
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Ah, perfect. Do we need to rename anything?",
+        "ts": "1744880940.000116"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "Not really, but you can edit the `workspace.json` file in each folder to customise the display name or logo.",
+        "ts": "1744881120.000240"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "That's handy. What about showing real names instead of user IDs?",
+        "ts": "1744881300.000621"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "Add the exported `members.csv` file from Slack \u2013 it matches IDs to real names in the UI.",
+        "ts": "1744881480.000483",
+        "reactions": [
+            {
+                "name": "sparkles",
+                "users": [
+                    "U01EXAMPLE1"
+                ],
+                "count": 1
+            }
+        ]
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "Game changer!",
+        "ts": "1744881660.000811"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Are emoji reactions supported?",
+        "ts": "1744881840.000822"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "Yup \u2013 reactions appear under each message. Hovering shows a tooltip with everyone who reacted.",
+        "ts": "1744882020.000881",
+        "reactions": [
+            {
+                "name": "eyes",
+                "users": [
+                    "U01EXAMPLE1",
+                    "U01EXAMPLE2",
+                    "U01EXAMPLE3"
+                ],
+                "count": 3
+            },
+            {
+                "name": "tada",
+                "users": [
+                    "U01EXAMPLE1",
+                    "U01EXAMPLE2",
+                    "U01EXAMPLE3"
+                ],
+                "count": 3
+            },
+            {
+                "name": "yes",
+                "users": [
+                    "U01EXAMPLE1",
+                    "U01EXAMPLE2",
+                    "U01EXAMPLE3"
+                ],
+                "count": 3
+            }
+        ]
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "\ud83d\udcaf",
+        "ts": "1744882200.000711"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "\ud83d\udd25",
+        "ts": "1744882380.000820"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "Uploading images also works \u2013 they show as placeholders if the file isn\u2019t available locally.",
+        "ts": "1744882560.000910"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Fake image time then!",
+        "ts": "1744882740.000546"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Check this out.",
+        "ts": "1744882920.000427"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Uploaded a file: concert_stage.png",
+        "ts": "1744883100.000232",
+        "files": [
+            {
+                "id": "F01FAKEFILEID",
+                "name": "concert_stage.png",
+                "mimetype": "image/png",
+                "filetype": "png",
+                "pretty_type": "PNG",
+                "url_private": "https://example.com/concert_stage.png",
+                "thumb_360": "https://example.com/thumb/concert_stage_360.png"
+            }
+        ],
+        "upload": true,
+        "reactions": [
+            {
+                "name": "camera",
+                "users": [
+                    "U01EXAMPLE3"
+                ],
+                "count": 1
+            }
+        ]
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "Yep, shows up as a preview box with filename and download link if hosted.",
+        "ts": "1744883280.000426"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "Honestly this is going to be a massive help for our archives.",
+        "ts": "1744883460.000506"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "Exactly. Even older chats become much easier to browse.",
+        "ts": "1744883640.000653"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Let\u2019s make sure we document this for the rest of the team!",
+        "ts": "1744883820.000846"
+    }
+]
