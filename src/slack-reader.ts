@@ -97,6 +97,8 @@ export class SlackReader extends LitElement {
   private async handleWorkspaceChange(workspace: string) {
     this.selectedWorkspace = workspace;
     this.selectedChannel = '';
+    this.messages = [];
+    this.channels = [];
     const selectedWorkspaceInfo = this.workspaces.find(w => w.folder === workspace);
     if (selectedWorkspaceInfo) {
       this.workspaceInfo = selectedWorkspaceInfo;
@@ -169,6 +171,22 @@ export class SlackReader extends LitElement {
     `;
   }
 
+  private renderEmptyWorkspace() {
+    return html`
+      <div class="empty-workspace">
+        <p>This workspace is empty.</p>
+        <p>Please add your exported Slack workspace files to:</p>
+        <code>/public/data/${this.selectedWorkspace}/</code>
+        <p>Required files and structure:</p>
+        <ul>
+          <li>workspace.json - Workspace configuration</li>
+          <li>members.csv - User data</li>
+          <li>Channel folders containing message JSON files</li>
+        </ul>
+      </div>
+    `;
+  }
+
   static styles = css`
     :host {
       display: flex;
@@ -179,8 +197,6 @@ export class SlackReader extends LitElement {
       background-color: var(--bg-secondary);
       overflow: hidden;
       box-sizing: border-box;
-
-      --header-height: 5.5rem;
     }
 
     *, *:before, *:after {
@@ -232,7 +248,7 @@ export class SlackReader extends LitElement {
     }
 
     .workspace-name {
-      font-size: 1.2rem;
+      font-size: var(--font-size-lg);
       font-weight: bold;
       margin: 0;
       color: var(--text-primary);
@@ -243,7 +259,7 @@ export class SlackReader extends LitElement {
 
     .workspace-description {
       margin: 0;
-      font-size: 0.9rem;
+      font-size: var(--font-size-base);
       color: var(--text-secondary);
       white-space: nowrap;
       overflow: hidden;
@@ -252,14 +268,14 @@ export class SlackReader extends LitElement {
 
     .workspace-export {
       margin: 0;
-      font-size: 0.8rem;
+      font-size: var(--font-size-base);
       color: var(--text-secondary);
     }
 
     .content {
       flex: 1 1 auto;
       display: grid;
-      grid-template-columns: 250px 1fr;
+      grid-template-columns: var(--sidebar-width) 1fr;
       grid-template-rows: 1fr;
       min-height: 0;
       height: calc(100vh - var(--header-height));
@@ -297,6 +313,35 @@ export class SlackReader extends LitElement {
       outline: none;
       border-color: var(--link-color);
     }
+
+    .empty-workspace {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .empty-workspace code {
+      background: var(--bg-secondary);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      font-family: monospace;
+    }
+
+    .empty-workspace ul {
+      text-align: left;
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .empty-workspace li {
+      margin: 0.5rem 0;
+    }
   `;
 
   render() {
@@ -326,11 +371,15 @@ export class SlackReader extends LitElement {
           .selectedChannelId=${this.selectedChannel}
           @channel-selected=${(e: CustomEvent<{channelId: string}>) => this.handleChannelSelect(e)}
         ></channel-list>
-        <message-list
-          .workspace=${this.selectedWorkspace}
-          .channel=${this.selectedChannel}
-          .messages=${this.messages}
-        ></message-list>
+        ${this.channels.length === 0 && this.selectedWorkspace
+          ? this.renderEmptyWorkspace()
+          : html`
+            <message-list
+              .workspace=${this.selectedWorkspace}
+              .channel=${this.selectedChannel}
+              .messages=${this.messages}
+            ></message-list>
+          `}
       </div>
     `;
   }
