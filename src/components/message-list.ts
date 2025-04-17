@@ -35,6 +35,7 @@ interface Message {
   reply_count?: number
   reactions?: Reaction[]
   files?: FileAttachment[]
+  parent_user_id?: string
 }
 
 @customElement('message-list')
@@ -42,8 +43,8 @@ export class MessageList extends LitElement {
   @property({ type: Array }) 
   set messages(value: Message[]) {
     const oldValue = this._messages;
-    // Filter out messages with invalid timestamps
-    this._messages = value.filter(msg => {
+    // First filter out invalid messages
+    const validMessages = value.filter(msg => {
       // Handle messages with files that might have 'created' instead of 'ts'
       if (!msg.ts && msg.files?.[0]?.created) {
         msg.ts = msg.files[0].created.toString();
@@ -55,6 +56,31 @@ export class MessageList extends LitElement {
       }
       return true;
     });
+
+    // Separate thread replies from main messages
+    const threadReplies = new Map<string, Message[]>();
+    const mainMessages = validMessages.filter(msg => {
+      if (msg.thread_ts && msg.thread_ts !== msg.ts) {
+        // This is a thread reply - group it with its parent
+        const replies = threadReplies.get(msg.thread_ts) || [];
+        replies.push(msg);
+        threadReplies.set(msg.thread_ts, replies);
+        return false; // Exclude from main timeline
+      }
+      return true; // Keep in main timeline
+    });
+
+    // Sort main messages by timestamp
+    mainMessages.sort((a, b) => parseFloat(a.ts) - parseFloat(b.ts));
+
+    // Sort thread replies by timestamp
+    threadReplies.forEach(replies => {
+      replies.sort((a, b) => parseFloat(a.ts) - parseFloat(b.ts));
+    });
+
+    // Store both for use in rendering
+    this._messages = mainMessages;
+    this._threadReplies = threadReplies;
     this.loadData();
     this.requestUpdate('messages', oldValue);
   }
@@ -62,11 +88,15 @@ export class MessageList extends LitElement {
     return this._messages;
   }
   private _messages: Message[] = [];
+  private _threadReplies: Map<string, Message[]> = new Map();
   
   @property({ type: String }) workspace: string = '';
   private userService = UserService.getInstance()
   private emojiService = EmojiService.getInstance()
   @state() private isDataLoaded = false;
+
+  @state()
+  private expandedThreads: Set<string> = new Set();
 
   private async loadData() {
     if (this._messages.length > 0 && this.workspace) {
@@ -224,6 +254,62 @@ export class MessageList extends LitElement {
     .message-attachments {
       margin-top: 0.5rem;
     }
+
+    .thread-indicator {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .thread-indicator:hover {
+      color: var(--text-primary);
+    }
+
+    .thread-reply {
+      margin-left: 2rem;
+      border-left: 2px solid var(--border-color);
+      padding-left: 1rem;
+    }
+
+    .reply-context {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .thread-icon {
+      width: 1rem;
+      height: 1rem;
+      fill: currentColor;
+    }
+
+    .message.has-threads {
+      background-color: var(--bg-secondary);
+      border-left: 3px solid var(--accent-color, #1264A3);
+      margin-left: -3px;
+    }
+
+    .message.has-threads:hover {
+      background-color: var(--bg-hover);
+    }
+
+    .thread-indicator {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background-color: var(--bg-tertiary, rgba(0, 0, 0, 0.05));
+      border-radius: 4px;
+      width: fit-content;
+    }
   `
 
   private formatTimestamp(ts: string): string {
@@ -359,21 +445,76 @@ export class MessageList extends LitElement {
     }
   }
 
+  private toggleThread(message: Message) {
+    const threadTs = message.thread_ts || message.ts;
+    if (this.expandedThreads.has(threadTs)) {
+      this.expandedThreads.delete(threadTs);
+    } else {
+      this.expandedThreads.add(threadTs);
+    }
+    this.requestUpdate();
+  }
+
+  private renderThreadInfo(message: Message): unknown {
+    if (message.thread_ts && message.thread_ts !== message.ts) {
+      // This is a reply message
+      return html`
+        <div class="reply-context">
+          Reply to ${this.getUserName(message.parent_user_id || '')}
+        </div>
+      `;
+    } else if (message.reply_count) {
+      // This is a parent message with replies
+      const isExpanded = this.expandedThreads.has(message.ts);
+      return html`
+        <div class="thread-indicator" @click=${() => this.toggleThread(message)}>
+          <svg class="thread-icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+          </svg>
+          ${message.reply_count} ${message.reply_count === 1 ? 'reply' : 'replies'}
+          ${isExpanded ? ' (expanded)' : ''}
+        </div>
+      `;
+    }
+    return null;
+  }
+
   render() {
     return html`
-      ${this._messages.map(message => html`
-        <div class="message">
-          <div class="message-header">
-            <span class="username">${this.getUserName(message.user)}</span>
-            <span class="timestamp">${this.formatTimestamp(message.ts)}</span>
+      ${this._messages.map(message => {
+        const threadReplies = this._threadReplies.get(message.ts) || [];
+        const isThreadExpanded = this.expandedThreads.has(message.thread_ts || message.ts);
+        
+        return html`
+          <div class="message ${message.reply_count ? 'has-threads' : ''}">
+            <div class="message-header">
+              <span class="username">${this.getUserName(message.user)}</span>
+              <span class="timestamp">${this.formatTimestamp(message.ts)}</span>
+            </div>
+            ${this.renderThreadInfo(message)}
+            ${message.text ? html`
+              <div class="message-text">${unsafeHTML(this.processMessageText(message.text))}</div>
+            ` : null}
+            ${this.renderFileAttachments(message.files)}
+            ${this.renderReactions(message.reactions)}
+            ${isThreadExpanded && threadReplies.length > 0 ? html`
+              ${threadReplies.map(reply => html`
+                <div class="message thread-reply">
+                  <div class="message-header">
+                    <span class="username">${this.getUserName(reply.user)}</span>
+                    <span class="timestamp">${this.formatTimestamp(reply.ts)}</span>
+                  </div>
+                  ${reply.text ? html`
+                    <div class="message-text">${unsafeHTML(this.processMessageText(reply.text))}</div>
+                  ` : null}
+                  ${this.renderFileAttachments(reply.files)}
+                  ${this.renderReactions(reply.reactions)}
+                </div>
+              `)}
+            ` : null}
           </div>
-          ${message.text ? html`
-            <div class="message-text">${unsafeHTML(this.processMessageText(message.text))}</div>
-          ` : null}
-          ${this.renderFileAttachments(message.files)}
-          ${this.renderReactions(message.reactions)}
-        </div>
-      `)}
+        `;
+      })}
     `;
   }
 }

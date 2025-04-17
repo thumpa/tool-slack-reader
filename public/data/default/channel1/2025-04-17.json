@@ -185,7 +185,33 @@
     {
         "type": "message",
         "user": "U01EXAMPLE2",
-        "text": "Let\u2019s make sure we document this for the rest of the team!",
-        "ts": "1744883820.000846"
+        "text": "Let's make sure we document this for the rest of the team!",
+        "ts": "1744883820.000846",
+        "thread_ts": "1744883820.000846",
+        "reply_count": 3
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE1",
+        "text": "Good call! I can help write up the setup instructions.",
+        "ts": "1744883940.000123",
+        "thread_ts": "1744883820.000846",
+        "parent_user_id": "U01EXAMPLE2"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE3",
+        "text": "I'll document the threading and emoji support features.",
+        "ts": "1744884060.000456",
+        "thread_ts": "1744883820.000846",
+        "parent_user_id": "U01EXAMPLE2"
+    },
+    {
+        "type": "message",
+        "user": "U01EXAMPLE2",
+        "text": "Perfect! I'll handle the file upload documentation. Should we create a GitHub repo for this?",
+        "ts": "1744884180.000789",
+        "thread_ts": "1744883820.000846",
+        "parent_user_id": "U01EXAMPLE2"
     }
 ]

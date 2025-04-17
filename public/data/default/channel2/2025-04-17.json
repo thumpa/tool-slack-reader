@@ -8,14 +8,76 @@
     {
       "type": "message",
       "user": "U01EXAMPLE2",
-      "text": "Yup, everything that was part of the export shows up."
-      ,"ts": "1744884060.000002"
+      "text": "Yup, everything that was part of the export shows up.",
+      "ts": "1744884060.000002"
     },
     {
       "type": "message",
       "user": "U01EXAMPLE3",
       "text": "Even threads are grouped under the right messages. Super tidy.",
-      "ts": "1744884120.000003"
+      "ts": "1744884120.000003",
+      "thread_ts": "1744884120.000003",
+      "reply_count": 3
+    },
+    {
+      "type": "message",
+      "user": "U01EXAMPLE1",
+      "text": "The indentation makes it really easy to follow conversations!",
+      "ts": "1744884180.000005",
+      "thread_ts": "1744884120.000003",
+      "parent_user_id": "U01EXAMPLE3",
+      "reactions": [
+        {
+          "name": "eyes",
+          "users": [
+            "U01EXAMPLE2",
+            "U01EXAMPLE3"
+          ],
+          "count": 2
+        }
+      ]
+    },
+    {
+      "type": "message",
+      "user": "U01EXAMPLE2",
+      "text": "And the expand/collapse feature keeps things clean when you don't need the full context.",
+      "ts": "1744884240.000006",
+      "thread_ts": "1744884120.000003",
+      "parent_user_id": "U01EXAMPLE3",
+      "reactions": [
+        {
+          "name": "white_check_mark",
+          "users": [
+            "U01EXAMPLE1"
+          ],
+          "count": 1
+        },
+        {
+          "name": "sparkles",
+          "users": [
+            "U01EXAMPLE3"
+          ],
+          "count": 1
+        }
+      ]
+    },
+    {
+      "type": "message",
+      "user": "U01EXAMPLE3",
+      "text": "Exactly! It's like having a mini conversation view right in the main channel.",
+      "ts": "1744884300.000007",
+      "thread_ts": "1744884120.000003",
+      "parent_user_id": "U01EXAMPLE3",
+      "reactions": [
+        {
+          "name": "tada",
+          "users": [
+            "U01EXAMPLE1",
+            "U01EXAMPLE2"
+          ],
+          "count": 2
+        }
+      ]
     },
     {
       "type": "message",
@@ -23,15 +85,15 @@
       "text": "Ohhh this is going to make digging through old discussions *soooo* much easier.",
       "ts": "1744884180.000004",
       "reactions": [
-            {
-                "name": "100",
-                "users": [
-                    "U01EXAMPLE2",
-                    "U01EXAMPLE3"
-                ],
-                "count": 2
-            }
-        ]
+        {
+          "name": "100",
+          "users": [
+            "U01EXAMPLE2",
+            "U01EXAMPLE3"
+          ],
+          "count": 2
+        }
+      ]
     }
   ]
   

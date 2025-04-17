@@ -18,7 +18,8 @@ A browser-based viewer for Slack export data, built with Lit.
   - [4.5. Theming](#45-theming)
   - [4.6. Message Formatting](#46-message-formatting)
 - [5. Development](#5-development)
-- [6. License](#6-license)
+- [6. References](#6-references)
+- [7. License](#7-license)
 
 ## 1. Features
 
@@ -27,6 +28,11 @@ A browser-based viewer for Slack export data, built with Lit.
 - Dark/light theme support using system preferences
 - Chronological message display with proper formatting
 - Channel navigation
+- Thread support:
+  - Expandable/collapsible thread views
+  - Visual distinction for parent messages
+  - Chronological ordering within threads
+  - Thread reply counts and indicators
 - User name resolution:
   - Display names in message headers
   - Resolve @mentions in message content
@@ -98,6 +104,9 @@ The application supports multiple workspaces, each with their own:
   - `user`: User ID
   - `text`: Message content (including @mentions)
   - `ts`: Timestamp
+  - `thread_ts`: Thread identifier (matches parent message timestamp)
+  - `reply_count`: Number of replies in thread (for parent messages)
+  - `parent_user_id`: ID of parent message author (for thread replies)
   - `reactions`: Array of reactions (optional)
 
 ### 3.3. User Data
@@ -171,6 +180,11 @@ Key layout features:
 
 4. `message-list`: Message display component
    - Chronological message rendering
+   - Thread management:
+     - Parent messages with distinct styling
+     - Indented thread replies
+     - Expand/collapse functionality
+     - Chronological ordering within threads
    - User name resolution for message authors
    - @mention resolution in message content
    - Timestamp formatting
@@ -279,6 +293,56 @@ The application includes robust message formatting features:
    - Console warnings for debugging
    - Fallback display options for edge cases
 
+6. **Thread Handling**
+   - Visual distinction for parent messages with threads
+   - Expandable/collapsible thread views
+   - Indented replies for better visual hierarchy
+   - Thread reply counts and indicators
+   - Chronological ordering within threads
+   - Clear parent-reply relationships
+   - Thread context preservation (Reply to [username])
+
+### 4.7. Thread Implementation
+
+The application implements a sophisticated threading system:
+
+1. **Thread Structure**
+   - Parent messages contain:
+     - `thread_ts` matching their own timestamp
+     - `reply_count` indicating number of replies
+   - Reply messages contain:
+     - `thread_ts` linking to parent message
+     - `parent_user_id` for context
+
+2. **Display Logic**
+   - Main timeline shows:
+     - Regular messages
+     - Thread parent messages
+     - Distinct styling for messages with replies
+   - Thread replies:
+     - Appear under parent when expanded
+     - Maintain chronological order within thread
+     - Indented for visual hierarchy
+     - Include "Reply to [username]" context
+
+3. **Visual Design**
+   - Parent messages:
+     - Distinct background colour
+     - Left accent border
+     - Reply count indicator
+   - Thread replies:
+     - Indented layout
+     - Left border for thread grouping
+     - Clear reply context
+     - Maintained within thread container
+
+4. **Interaction Model**
+   - Click thread indicator to expand/collapse
+   - Threads expand in place
+   - Parent messages remain in timeline
+   - Reply visibility tied to thread state
+   - Clear expand/collapse feedback
+
 ## 5. Development
 
 1. Install dependencies:
@@ -315,6 +379,14 @@ The application includes robust message formatting features:
    - Choose a channel from the sidebar
    - Messages will load and display chronologically with resolved usernames
 
-## 6. License
+## 6. References
+
+Relevant Slack documentation:
+
+- [Exporting your workspace data](https://slack.com/intl/en-gb/help/articles/201658943-Export-your-workspace-data)
+- [How to read Slack data exports](https://slack.com/intl/en-gb/help/articles/220556107-How-to-read-Slack-data-exports#json-files-1)
+- [Understanding Slack Messages](https://api.slack.com/surfaces/messages)
+
+## 7. License
 
 [Add your license information here]
