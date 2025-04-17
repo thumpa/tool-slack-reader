@@ -5,7 +5,7 @@ import apiRouter from './api';
 import { WorkspaceService } from '../utils/workspace-service';
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 // Initialize workspace service
 const workspaceService = WorkspaceService.getInstance();
