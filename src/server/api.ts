@@ -277,4 +277,28 @@ router.get('/workspace-info', async (req, res) => {
   }
 });
 
+// Get users for a workspace
+router.get('/users', async (req, res) => {
+  try {
+    const { workspace } = req.query;
+    if (!workspace || typeof workspace !== 'string') {
+      return res.status(400).json({ error: 'Workspace parameter is required' });
+    }
+
+    const workspacePath = getWorkspacePath(workspace);
+    const usersPath = path.join(workspacePath, 'users.json');
+    
+    if (!existsSync(usersPath)) {
+      return res.status(404).json({ error: 'Users file not found' });
+    }
+
+    const content = await fs.readFile(usersPath, 'utf-8');
+    const users = JSON.parse(content);
+    res.json(users);
+  } catch (error) {
+    console.error('Error loading users:', error);
+    res.status(500).json({ error: 'Failed to load users' });
+  }
+});
+
 export default router; 

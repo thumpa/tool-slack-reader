@@ -4,6 +4,7 @@ import './components/channel-list'
 import './components/message-list'
 import './components/theme-switch'
 import './components/workspace-selector'
+import './components/user-table'
 
 interface Channel {
   id: string;
@@ -230,7 +231,7 @@ export class SlackReader extends LitElement {
     .header {
       flex: 0 0 auto;
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr auto auto auto;
       align-items: center;
       gap: 1rem;
       padding: 1rem 1.5rem;
@@ -342,6 +343,21 @@ export class SlackReader extends LitElement {
     .empty-workspace li {
       margin: 0.5rem 0;
     }
+
+    .header-button {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: var(--font-size-base);
+    }
+
+    .header-button:hover {
+      background: var(--bg-hover);
+    }
   `;
 
   render() {
@@ -363,7 +379,11 @@ export class SlackReader extends LitElement {
             @theme-changed=${this.handleThemeChange}
           ></theme-switch>
         </div>
+        <button class="header-button" @click=${this.showUserTable}>
+          View Users
+        </button>
       </div>
+      <user-table></user-table>
       <div class="content">
         <channel-list
           .channels=${this.channels}
@@ -382,6 +402,21 @@ export class SlackReader extends LitElement {
           `}
       </div>
     `;
+  }
+
+  private async showUserTable() {
+    const userTable = this.shadowRoot?.querySelector('user-table');
+    if (userTable) {
+      try {
+        const response = await fetch(`/api/users?workspace=${this.selectedWorkspace}`);
+        if (!response.ok) throw new Error('Failed to load users');
+        const users = await response.json();
+        (userTable as any).users = users;
+        (userTable as any).show();
+      } catch (error) {
+        console.error('Error loading users:', error);
+      }
+    }
   }
 }
 

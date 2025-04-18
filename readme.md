@@ -130,6 +130,7 @@ The application uses the Slack export's `users.json` file for user data. This fi
 ```
 
 Key user data fields:
+
 - `id`: Unique user identifier
 - `name`: Username
 - `real_name`: User's full name
@@ -139,6 +140,7 @@ Key user data fields:
 - `profile.status_text`: User's status message
 
 The application uses a fallback chain for displaying user names:
+
 1. `profile.display_name`
 2. `real_name`
 3. `name`
