@@ -101,7 +101,7 @@ export class MessageList extends LitElement {
   private async loadData() {
     if (this._messages.length > 0 && this.workspace) {
       await Promise.all([
-        this.userService.loadUsers(`/data/${this.workspace}/members.csv`),
+        this.userService.loadUsers(`/data/${this.workspace}/users.json`),
         this.emojiService.initializeEmojiMap()
       ]);
       this.isDataLoaded = true;

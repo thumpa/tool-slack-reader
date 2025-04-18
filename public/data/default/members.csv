@@ -1,4 +1,0 @@
-username,email,status,billing-active,has-2fa,has-sso,userid,fullname,displayname,expiration-timestamp
-jane,jane@example.com,Admin,1,1,0,U01EXAMPLE1,"Jane Andrews",Jane Andrews,
-john,john@example.com,Owner,0,0,0,U01EXAMPLE2,John Mellior,john,
-wildbill23,wildbill@example.com,Owner,0,1,0,U01EXAMPLE3,"William Brace",WildBill23,

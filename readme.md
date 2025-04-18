@@ -49,11 +49,11 @@ A browser-based viewer for Slack export data, built with Lit.
 ├── public/
 │   └── data/
 │       ├── workspace1/        # First workspace directory
-│       │   ├── members.csv    # User data file
+│       │   ├── users.json     # User data from Slack export
 │       │   ├── pet-tax/       # Channel export files by date
 │       │   └── pitches/       # Channel export files by date
 │       └── workspace2/        # Second workspace directory
-│           ├── members.csv
+│           ├── users.json
 │           └── channels/
 ├── src/
 │   ├── components/
@@ -111,14 +111,38 @@ The application supports multiple workspaces, each with their own:
 
 ### 3.3. User Data
 
-The application expects user data in a CSV format (`members.csv`) with the following columns:
+The application uses the Slack export's `users.json` file for user data. This file contains detailed user information in JSON format:
 
-- `username`: User's username
-- `email`: User's email address
-- `status`: User's status
-- `userid`: Unique user identifier
-- `fullname`: User's full name
-- `displayname`: User's display name
+```json
+{
+  "id": "U01EXAMPLE1",
+  "name": "username",
+  "real_name": "Full Name",
+  "deleted": false,
+  "profile": {
+    "display_name": "Display Name",
+    "email": "user@example.com",
+    "status_text": "Status message",
+    "first_name": "First",
+    "last_name": "Last"
+  }
+}
+```
+
+Key user data fields:
+- `id`: Unique user identifier
+- `name`: Username
+- `real_name`: User's full name
+- `deleted`: Whether the user has been deactivated
+- `profile.display_name`: User's chosen display name
+- `profile.email`: User's email address
+- `profile.status_text`: User's status message
+
+The application uses a fallback chain for displaying user names:
+1. `profile.display_name`
+2. `real_name`
+3. `name`
+4. User ID
 
 ## 4. Implementation Details
 
@@ -370,7 +394,7 @@ The application implements a sophisticated threading system:
    - Add `workspace.json` to each workspace directory
    - Create channel directories within each workspace
    - Place JSON files in their respective channel directories
-   - Add `members.csv` to each workspace directory
+   - Add `users.json` to each workspace directory
    - Message files should be named `YYYY-MM-DD.json`
 
 4. Access the application:

@@ -179,9 +179,9 @@ export class SlackReader extends LitElement {
         <code>/public/data/${this.selectedWorkspace}/</code>
         <p>Required files and structure:</p>
         <ul>
-          <li>workspace.json - Workspace configuration</li>
-          <li>members.csv - User data</li>
-          <li>Channel folders containing message JSON files</li>
+          <li>channels/ - Channel directories containing message JSON files</li>
+          <li>users.json - User data from Slack export</li>
+          <li>integration_logs.json - Integration activity logs</li>
         </ul>
       </div>
     `;

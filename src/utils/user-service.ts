@@ -5,6 +5,7 @@ export interface SlackUser {
   display_name?: string
   email?: string
   status?: string
+  deleted?: boolean
 }
 
 export class UserService {
@@ -20,43 +21,31 @@ export class UserService {
     return UserService.instance
   }
 
-  async loadUsers(csvPath: string): Promise<void> {
+  async loadUsers(workspacePath: string): Promise<void> {
     try {
-      console.log('Loading users from:', csvPath)
-      const response = await fetch(csvPath)
+      console.log('Loading users from:', workspacePath)
+      const jsonPath = workspacePath.replace('members.csv', 'users.json')
+      const response = await fetch(jsonPath)
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${csvPath}: ${response.status} ${response.statusText}`)
+        throw new Error(`Failed to fetch ${jsonPath}: ${response.status} ${response.statusText}`)
       }
-      const csvText = await response.text()
+      const users = await response.json()
       
-      // Parse CSV, skip header row
-      const rows = csvText.split('\n').slice(1)
-      
-      rows.forEach(row => {
-        if (!row.trim()) return // Skip empty rows
-        
-        // Split on commas, but handle quoted values
-        const values = row.split(',').map(value => 
-          value.startsWith('"') && value.endsWith('"') 
-            ? value.slice(1, -1) 
-            : value
-        )
-
-        const [username, email, status, , , , userid, fullname, displayname] = values
-        
-        if (userid && username) {
-          this.users.set(userid, {
-            id: userid,
-            name: username,
-            real_name: fullname || undefined,
-            display_name: displayname || undefined,
-            email: email || undefined,
-            status: status || undefined
+      users.forEach((user: any) => {
+        if (user.id && user.name) {
+          this.users.set(user.id, {
+            id: user.id,
+            name: user.name,
+            real_name: user.real_name || undefined,
+            display_name: user.profile?.display_name || undefined,
+            email: user.profile?.email || undefined,
+            status: user.profile?.status_text || undefined,
+            deleted: user.deleted || false
           })
         }
       })
 
-      console.log(`Loaded ${this.users.size} users from ${csvPath}`)
+      console.log(`Loaded ${this.users.size} users from ${jsonPath}`)
     } catch (error) {
       console.error('Failed to load users:', error)
     }
@@ -69,20 +58,20 @@ export class UserService {
       return userId;
     }
 
-    console.log('Found user:', {
-      id: userId,
-      name: user.name,
-      real_name: user.real_name,
-      display_name: user.display_name
-    });
+    // Don't log all user details in production
+    console.log(`Found user: ${user.id}`);
 
     const displayName = user.display_name || 
                        user.real_name || 
                        user.name || 
                        userId;
     
-    console.log(`Resolved display name for ${userId}: ${displayName}`);
-    return displayName;
+    // Add (deleted) suffix for deleted users
+    const suffix = user.deleted ? ' (deleted)' : '';
+    const finalName = displayName + suffix;
+    
+    console.log(`Resolved display name for ${userId}: ${finalName}`);
+    return finalName;
   }
 
   getUser(userId: string): SlackUser | undefined {
