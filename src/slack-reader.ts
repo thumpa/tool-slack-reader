@@ -212,8 +212,6 @@ export class SlackReader extends LitElement {
       --text-primary: #d1d2d3;
       --text-secondary: #9da2a6;
       --border-color: #5c5c5c;
-      --link-color: #3d9bea;
-      --reaction-count-color: #9da2a6;
     }
 
     :host(:not([dark])) {
@@ -224,8 +222,6 @@ export class SlackReader extends LitElement {
       --text-primary: #1d1c1d;
       --text-secondary: #616061;
       --border-color: #b0b0b0;
-      --link-color: #1264a3;
-      --reaction-count-color: #616061;
     }
 
     .header {
@@ -302,12 +298,18 @@ export class SlackReader extends LitElement {
       justify-self: end;
     }
 
+    .workspace-selector {
+      min-width: 120px;
+    }
+
     .workspace-selector select {
       padding: 0.5rem;
       border-radius: 4px;
       border: 1px solid var(--border-color);
       background-color: var(--bg-secondary);
       color: var(--text-primary);
+      width: 100%;
+      font-size: var(--font-size-base);
     }
 
     .workspace-selector select:focus {

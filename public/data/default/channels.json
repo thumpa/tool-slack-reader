@@ -1,0 +1,52 @@
+[
+  {
+    "id": "CHANNEL1",
+    "name": "channel1",
+    "created": 1704067200,
+    "creator": "U01EXAMPLE2",
+    "is_archived": false,
+    "is_general": false,
+    "members": [
+      "U01EXAMPLE1",
+      "U01EXAMPLE2",
+      "U01EXAMPLE3"
+    ],
+    "topic": {
+      "value": "General team discussions and updates",
+      "creator": "U01EXAMPLE2",
+      "last_set": 1704067200
+    },
+    "purpose": {
+      "value": "This channel is for team-wide communication, project updates, and general discussions. All team members are welcome to participate.",
+      "creator": "U01EXAMPLE2",
+      "last_set": 1704067200
+    },
+    "message_count": 20,
+    "last_updated": "2025-04-17T09:27:08.171Z"
+  },
+  {
+    "id": "CHANNEL2",
+    "name": "channel2",
+    "created": 1704067200,
+    "creator": "U01EXAMPLE2",
+    "is_archived": false,
+    "is_general": false,
+    "members": [
+      "U01EXAMPLE1",
+      "U01EXAMPLE2",
+      "U01EXAMPLE3"
+    ],
+    "topic": {
+      "value": "Technical discussions and support",
+      "creator": "U01EXAMPLE2",
+      "last_set": 1704067200
+    },
+    "purpose": {
+      "value": "A channel dedicated to technical discussions, troubleshooting, and sharing technical knowledge among team members.",
+      "creator": "U01EXAMPLE2",
+      "last_set": 1704067200
+    },
+    "message_count": 4,
+    "last_updated": "2025-04-17T09:27:08.171Z"
+  }
+] 

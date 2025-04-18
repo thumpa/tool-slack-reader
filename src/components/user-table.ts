@@ -50,6 +50,7 @@ export class UserTable extends LitElement {
       max-height: 90vh;
       overflow: auto;
       position: relative;
+      border: 1px solid var(--border-color);
     }
 
     .modal-header {

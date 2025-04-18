@@ -5,21 +5,22 @@ A browser-based viewer for Slack export data, built with Lit.
 ## Table of Contents
 
 - [1. Features](#1-features)
-- [2. Project Structure](#2-project-structure)
-- [3. Data Structure](#3-data-structure)
-  - [3.1. Workspace Metadata](#31-workspace-metadata)
-  - [3.2. Channel Data](#32-channel-data)
-  - [3.3. User Data](#33-user-data)
-- [4. Implementation Details](#4-implementation-details)
-  - [4.1. Layout Structure](#41-layout-structure)
-  - [4.2. Components](#42-components)
-  - [4.3. Services](#43-services)
-  - [4.4. Performance Optimisations](#44-performance-optimisations)
-  - [4.5. Theming](#45-theming)
-  - [4.6. Message Formatting](#46-message-formatting)
-- [5. Development](#5-development)
-- [6. References](#6-references)
-- [7. License](#7-license)
+- [2. User Table Implementation](#2-user-table-implementation)
+- [3. Project Structure](#3-project-structure)
+- [4. Data Structure](#4-data-structure)
+  - [4.1. Workspace Metadata](#41-workspace-metadata)
+  - [4.2. Channel Data](#42-channel-data)
+  - [4.3. User Data](#43-user-data)
+- [5. Implementation Details](#5-implementation-details)
+  - [5.1. Layout Structure](#51-layout-structure)
+  - [5.2. Components](#52-components)
+  - [5.3. Services](#53-services)
+  - [5.4. Performance Optimisations](#54-performance-optimisations)
+  - [5.5. Theming](#55-theming)
+  - [5.6. Message Formatting](#56-message-formatting)
+- [6. Development](#6-development)
+- [7. References](#7-references)
+- [8. License](#8-license)
 
 ## 1. Features
 
@@ -42,8 +43,19 @@ A browser-based viewer for Slack export data, built with Lit.
 - Clean sidebar with only channel folders visible
 - Persistent workspace state between sessions
 - Automatic theme switching based on system preferences
+- View user information in a sortable table including:
+  - Display name
+  - Real name
+  - Username
+  - Email
+  - Status (Active/Deactivated)
+  - Role (Admin/Owner/Member)
 
-## 2. Project Structure
+## 2. User Table Implementation
+
+The user table component displays member information from the workspace's `users.json` file. The table provides a sortable view of all workspace members with key information about each user. Note that while the table shows whether users are active or deactivated, the Slack export data does not include historical information about when users were activated or deactivated - only their current status is available.
+
+## 3. Project Structure
 
 ``` markdown
 ├── public/
@@ -68,9 +80,9 @@ A browser-based viewer for Slack export data, built with Lit.
 └── index.html                # Entry point with theme variables
 ```
 
-## 3. Data Structure
+## 4. Data Structure
 
-### 3.1. Workspace Metadata
+### 4.1. Workspace Metadata
 
 Each workspace requires a `workspace.json` file in its directory:
 
@@ -95,7 +107,7 @@ The application supports multiple workspaces, each with their own:
 - Isolated message history
 - Unique workspace metadata
 
-### 3.2. Channel Data
+### 4.2. Channel Data
 
 - Each channel has its own directory under `public/data/`
 - Messages are split into daily JSON files named `YYYY-MM-DD.json`
@@ -109,7 +121,7 @@ The application supports multiple workspaces, each with their own:
   - `parent_user_id`: ID of parent message author (for thread replies)
   - `reactions`: Array of reactions (optional)
 
-### 3.3. User Data
+### 4.3. User Data
 
 The application uses the Slack export's `users.json` file for user data. This file contains detailed user information in JSON format:
 
@@ -146,9 +158,9 @@ The application uses a fallback chain for displaying user names:
 3. `name`
 4. User ID
 
-## 4. Implementation Details
+## 5. Implementation Details
 
-### 4.1. Layout Structure
+### 5.1. Layout Structure
 
 The application follows a three-section layout design:
 
@@ -185,7 +197,9 @@ Key layout features:
 - Channel list shows folders only
 - Messages include author, timestamp, and formatted content
 
-### 4.2. Components
+### 5.2. Components
+
+#### Core Components
 
 1. `slack-reader`: Main component providing the layout structure
    - Grid-based layout with header and content areas
@@ -222,7 +236,25 @@ Key layout features:
    - Respects system preferences
    - Persists theme selection
 
-### 4.3. Services
+#### UI Components
+
+For detailed implementation and styling information about UI components, see the [UI Components Documentation](src/components/README.md). Key UI components include:
+
+- Message Display:
+  - `message-item`: Individual message rendering with support for threading
+  - `message-reactions`: Displays emoji reactions with counts
+  - `message-attachments`: Handles file attachments and previews
+  
+- Navigation:
+  - `channel-folder`: Collapsible channel category display
+  - `breadcrumb-nav`: Workspace and channel navigation trail
+  
+- User Interface:
+  - `user-avatar`: Circular user avatar with status indicator
+  - `loading-spinner`: Animated loading indicator
+  - `error-boundary`: Graceful error state handling
+
+### 5.3. Services
 
 1. `UserService`: Singleton service for user data management
    - CSV parsing for user data
@@ -252,7 +284,7 @@ Key layout features:
      }
      ```
 
-### 4.4. Performance Optimisations
+### 5.4. Performance Optimisations
 
 1. **Metadata Caching**
    - Channel message counts are cached to avoid unnecessary recounting
@@ -272,7 +304,7 @@ Key layout features:
    - Robust error handling with fallback strategies
    - Clear logging for debugging and monitoring
 
-### 4.5. Theming
+### 5.5. Theming
 
 The application uses CSS custom properties for theming:
 
@@ -288,7 +320,7 @@ The application uses CSS custom properties for theming:
 
 Dark mode is automatically applied based on system preferences using `@media (prefers-color-scheme: dark)`.
 
-### 4.6. Message Formatting
+### 5.6. Message Formatting
 
 The application includes robust message formatting features:
 
@@ -328,7 +360,7 @@ The application includes robust message formatting features:
    - Clear parent-reply relationships
    - Thread context preservation (Reply to [username])
 
-### 4.7. Thread Implementation
+### 5.7. Thread Implementation
 
 The application implements a sophisticated threading system:
 
@@ -369,7 +401,7 @@ The application implements a sophisticated threading system:
    - Reply visibility tied to thread state
    - Clear expand/collapse feedback
 
-## 5. Development
+## 6. Development
 
 1. Install dependencies:
 
@@ -405,7 +437,7 @@ The application implements a sophisticated threading system:
    - Choose a channel from the sidebar
    - Messages will load and display chronologically with resolved usernames
 
-## 6. References
+## 7. References
 
 Relevant Slack documentation:
 
@@ -413,6 +445,6 @@ Relevant Slack documentation:
 - [How to read Slack data exports](https://slack.com/intl/en-gb/help/articles/220556107-How-to-read-Slack-data-exports#json-files-1)
 - [Understanding Slack Messages](https://api.slack.com/surfaces/messages)
 
-## 7. License
+## 8. License
 
 [Add your license information here]
