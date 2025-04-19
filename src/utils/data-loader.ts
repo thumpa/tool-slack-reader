@@ -11,14 +11,14 @@ export interface Message {
   files?: any[];
 }
 
-export interface Channel {
+export interface ChannelListItem {
   id: string;
   name: string;
 }
 
 export class DataLoader {
   private static instance: DataLoader;
-  private channelCache: Map<string, Channel[]> = new Map();
+  private channelCache: Map<string, ChannelListItem[]> = new Map();
   private messageCache: Map<string, Message[]> = new Map();
   private fileListCache: Map<string, string[]> = new Map();
 
@@ -35,7 +35,7 @@ export class DataLoader {
     return channelId ? `${workspace}:${channelId}` : workspace;
   }
 
-  public async loadChannels(workspace: string): Promise<Channel[]> {
+  public async loadChannels(workspace: string): Promise<ChannelListItem[]> {
     const cacheKey = this.getCacheKey(workspace);
     if (this.channelCache.has(cacheKey)) {
       return this.channelCache.get(cacheKey)!;

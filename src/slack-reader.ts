@@ -1,22 +1,11 @@
 import { LitElement, css, html } from 'lit'
-import { customElement, state, property } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import './components/channel-list'
 import './components/message-list'
 import './components/theme-switch'
 import './components/workspace-selector'
 import './components/user-table'
-
-interface Channel {
-  id: string;
-  name: string;
-  created: number;
-  creator: string;
-  is_archived: boolean;
-  is_general: boolean;
-  members: string[];
-  topic: { value: string; creator: string; last_set: number };
-  purpose: { value: string; creator: string; last_set: number };
-}
+import { Channel } from './types/channel'
 
 interface Message {
   client_msg_id?: string;

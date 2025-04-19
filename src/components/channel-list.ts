@@ -1,11 +1,11 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { Channel } from '../utils/data-loader';
+import { ChannelListItem } from '../utils/data-loader.ts';
 import { ChannelMetadataService } from '../utils/channel-metadata-service';
 
 @customElement('channel-list')
 export class ChannelList extends LitElement {
-  @property({ type: Array }) channels: Channel[] = [];
+  @property({ type: Array }) channels: ChannelListItem[] = [];
   @property({ type: String }) selectedChannelId: string = '';
   @property({ type: String }) workspace: string = '';
   @state() private channelCounts: { [key: string]: number | null } = {};
@@ -103,7 +103,7 @@ export class ChannelList extends LitElement {
     }
   }
 
-  async handleChannelClick(channel: Channel) {
+  async handleChannelClick(channel: ChannelListItem) {
     this.selectedChannelId = channel.id;
     this.dispatchEvent(new CustomEvent('channel-selected', {
       detail: { channelId: channel.id },
