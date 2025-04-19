@@ -129,8 +129,20 @@ export class ChannelMetadataService {
 
       for (const file of files) {
         if (file.endsWith('.json') && file !== 'channel-metadata.json') {
-          const messages = await this.dataLoader.loadChannelMessages(workspace, channelName);
-          totalCount += messages.length;
+          try {
+            const response = await fetch(`/api/channels/${channelName}/${file}?workspace=${workspace}`);
+            if (!response.ok) {
+              console.warn(`Failed to load file ${file} for channel ${channelName}: ${response.statusText}`);
+              continue;
+            }
+            const messages = await response.json();
+            if (Array.isArray(messages)) {
+              totalCount += messages.length;
+            }
+          } catch (error) {
+            console.warn(`Error processing file ${file} for channel ${channelName}:`, error);
+            continue;
+          }
         }
       }
 

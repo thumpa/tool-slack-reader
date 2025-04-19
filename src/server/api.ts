@@ -50,16 +50,21 @@ router.get('/workspaces', async (req, res) => {
           export_date: stats.mtime.toISOString().split('T')[0]
         };
 
-        // Try to read workspace.json if it exists
+        const workspaceJsonPath = path.join(itemPath, 'workspace.json');
+        
+        // Try to read existing workspace.json
         try {
-          const workspaceJsonPath = path.join(itemPath, 'workspace.json');
           if (existsSync(workspaceJsonPath)) {
             const content = await fs.readFile(workspaceJsonPath, 'utf-8');
             const metadata = JSON.parse(content);
             workspaceInfo = { ...workspaceInfo, ...metadata };
+          } else {
+            // Create workspace.json if it doesn't exist
+            console.log(`Creating workspace.json for ${item}`);
+            await fs.writeFile(workspaceJsonPath, JSON.stringify(workspaceInfo, null, 2));
           }
         } catch (err) {
-          console.warn(`No workspace.json found for ${item}, using defaults`);
+          console.warn(`Error with workspace.json for ${item}:`, err);
         }
 
         workspaces.push(workspaceInfo);

@@ -57,34 +57,53 @@ The user table component displays member information from the workspace's `users
 
 ## 3. Project Structure
 
-``` markdown
+```markdown
 ├── public/
 │   └── data/
-│       ├── workspace1/        # First workspace directory
-│       │   ├── users.json     # User data from Slack export
-│       │   ├── pet-tax/       # Channel export files by date
-│       │   └── pitches/       # Channel export files by date
-│       └── workspace2/        # Second workspace directory
+│       ├── workspace1/              # First workspace directory
+│       │   ├── workspace.json      # Workspace configuration
+│       │   ├── channel-metadata.json # Channel statistics cache
+│       │   ├── users.json          # User data from Slack export
+│       │   └── channels/           # Channel directories
+│       │       ├── general/        # Channel export files by date
+│       │       └── random/         # Channel export files by date
+│       └── workspace2/             # Second workspace directory
+│           ├── workspace.json
+│           ├── channel-metadata.json
 │           ├── users.json
 │           └── channels/
 ├── src/
 │   ├── components/
-│   │   ├── channel-list.ts    # Channel list component
-│   │   ├── message-list.ts    # Message display component
-│   │   ├── theme-switch.ts    # Theme toggling component
-│   │   └── workspace-selector.ts # Workspace selection component
+│   │   ├── channel-list.ts        # Channel list component
+│   │   ├── channel-header.ts      # Channel header with info modal
+│   │   ├── message-list.ts        # Message display component
+│   │   ├── theme-switch.ts        # Theme toggling component
+│   │   ├── user-table.ts          # User information modal
+│   │   ├── workspace-selector.ts  # Workspace selection component
+│   │   └── ui/                    # Shared UI components
+│   ├── server/
+│   │   └── api.ts                 # Express API routes
+│   ├── styles/                    # Global styles and themes
+│   ├── types/
+│   │   └── channel.ts            # Shared type definitions
 │   ├── utils/
-│   │   ├── data-loader.ts     # Channel and message loading
-│   │   └── user-service.ts    # User data management
-│   └── slack-reader.ts        # Main application component
-└── index.html                # Entry point with theme variables
+│   │   ├── channel-metadata-service.ts  # Channel statistics management
+│   │   ├── channel-service.ts     # Channel data operations
+│   │   ├── data-loader.ts         # Data loading and caching
+│   │   ├── emoji-service.ts       # Emoji handling
+│   │   ├── user-service.ts        # User data management
+│   │   └── workspace-service.ts   # Workspace operations
+│   └── slack-reader.ts            # Main application component
+└── index.html                     # Entry point
 ```
 
 ## 4. Data Structure
 
 ### 4.1. Workspace Metadata
 
-Each workspace requires a `workspace.json` file in its directory:
+Each workspace requires two metadata files:
+
+1. `workspace.json` - Workspace configuration:
 
 ```json
 {
@@ -99,6 +118,24 @@ Each workspace requires a `workspace.json` file in its directory:
   "export_date": "2025-04-14"
 }
 ```
+
+2. `channel-metadata.json` - Channel statistics cache:
+
+```json
+{
+  "channels": {
+    "channel-name": {
+      "messageCount": 1234,
+      "lastCounted": "2024-03-20T12:34:56.789Z"
+    }
+  }
+}
+```
+
+The application automatically creates and maintains these files:
+
+- `workspace.json` is created when a new workspace is first accessed
+- `channel-metadata.json` is created and updated as channels are accessed
 
 The application supports multiple workspaces, each with their own:
 
@@ -264,38 +301,34 @@ For detailed implementation and styling information about UI components, see the
 ### 5.3. Services
 
 1. `UserService`: Singleton service for user data management
-   - CSV parsing for user data
-   - Name resolution with fallback chain
-   - Caching of user information
+   - Loads and caches user data from users.json
+   - Provides name resolution with fallback chain
+   - Handles @mention resolution in messages
 
 2. `DataLoader`: Data loading and caching service
-   - Channel directory filtering
-   - Message loading and parsing
-   - Message caching for performance
+   - Manages channel and message data caching
+   - Provides efficient data retrieval methods
+   - Handles file system operations for channel data
 
-3. `ChannelService`: Channel data management service
-   - Loads and caches channel information from channels.json
-   - Provides channel details including topics and purposes
-   - Case-insensitive channel matching
-   - Efficient channel data retrieval
+3. `ChannelService`: Channel data management
+   - Loads and caches channel information
+   - Provides channel details (topic, purpose)
+   - Handles channel name normalization
 
-4. `ChannelMetadataService`: Channel metadata management service
-   - Efficient message counting with persistent caching
-   - Automatic metadata loading on startup
-   - Channel statistics persistence
-   - Normalized channel name handling
-   - JSON-based metadata storage structure:
+4. `ChannelMetadataService`: Statistics management
+   - Maintains message count cache
+   - Provides persistent storage of channel statistics
+   - Handles automatic metadata updates
 
-     ```json
-     {
-       "channels": {
-         "channel-name": {
-           "messageCount": 1234,
-           "lastCounted": "2024-03-20T12:34:56.789Z"
-         }
-       }
-     }
-     ```
+5. `WorkspaceService`: Workspace operations
+   - Manages workspace configuration
+   - Handles workspace switching
+   - Maintains workspace state
+
+6. `EmojiService`: Emoji handling
+   - Manages emoji data and rendering
+   - Handles reaction displays
+   - Provides emoji name resolution
 
 ### 5.4. Performance Optimisations
 

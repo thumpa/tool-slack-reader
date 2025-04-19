@@ -1,0 +1,10 @@
+{
+  "tool_name": "Slack Message Viewer",
+  "workspace_name": "OtherWorkspace",
+  "date_range": {
+    "start": "2025-01-01",
+    "end": "2025-04-14"
+  },
+  "description": "Slack message viewer for OtherWorkspace",
+  "export_date": "2025-04-14"
+} 
