@@ -1,19 +1,5 @@
 import { DataLoader } from './data-loader';
-
-interface Channel {
-  id: string;
-  name: string;
-  topic: {
-    value: string;
-    creator: string;
-    last_set: number;
-  };
-  purpose: {
-    value: string;
-    creator: string;
-    last_set: number;
-  };
-}
+import { Channel } from '../types/channel';
 
 export class ChannelService {
   private static instance: ChannelService;

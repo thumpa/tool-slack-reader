@@ -135,11 +135,13 @@ When working with form elements (select, input, textarea), follow these guidelin
 2. **Parent Component Overrides**
    - Set explicit font sizes in parent components where needed
    - Example:
+
      ```css
      .your-component select {
        font-size: var(--font-size-base);
      }
      ```
+
    - This ensures consistent text sizing across different browsers
 
 3. **Browser Consistency**
@@ -189,4 +191,4 @@ class MyComponent extends LitElement {
     `;
   }
 }
-``` 
+```

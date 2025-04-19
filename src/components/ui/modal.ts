@@ -29,6 +29,7 @@ export class Modal extends LitElement {
       background-color: var(--bg-secondary);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: var(--modal-width, 800px);
       max-width: 90vw;
       max-height: 90vh;
       overflow: auto;
@@ -76,7 +77,7 @@ export class Modal extends LitElement {
 
   render() {
     return html`
-      <div class="modal" ?hidden=${!this.isVisible}>
+      <div class="modal" part="modal" ?hidden=${!this.isVisible}>
         <div class="modal-header">
           <h2 class="modal-title">${this.title}</h2>
           <button class="close-button" @click=${this.close}>×</button>

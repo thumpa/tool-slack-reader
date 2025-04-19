@@ -31,6 +31,7 @@ yarn-error.log*
 *.sln
 *.sw?
 
-# Data directory - exclude all except default
+# Data directory - exclude all except default and OtherWorkSpace
 public/data/*
 !public/data/default/
+!public/data/OtherWorkSpace/

@@ -3,22 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js'
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import { UserService } from '../utils/user-service'
 import { EmojiService } from '../utils/emoji-service'
+import { Channel } from '../types/channel'
 import './channel-header'
-
-interface Channel {
-  id: string;
-  name: string;
-  topic: {
-    value: string;
-    creator: string;
-    last_set: number;
-  };
-  purpose: {
-    value: string;
-    creator: string;
-    last_set: number;
-  };
-}
 
 interface Reaction {
   name: string
