@@ -126,7 +126,10 @@ export class SlackReader extends LitElement {
 
   private async handleChannelSelect(e: CustomEvent<{channelId: string}>) {
     this.selectedChannel = e.detail.channelId;
-    await this.loadMessages(this.selectedWorkspace, e.detail.channelId);
+    const selectedChannel = this.channels.find(c => c.id === e.detail.channelId);
+    if (selectedChannel) {
+      await this.loadMessages(this.selectedWorkspace, e.detail.channelId);
+    }
   }
 
   private async loadMessages(workspace: string, channel: string) {
@@ -363,6 +366,8 @@ export class SlackReader extends LitElement {
   `;
 
   render() {
+    const selectedChannel = this.channels.find(c => c.id === this.selectedChannel);
+    
     return html`
       <div class="header">
         ${this.renderWorkspaceInfo()}
@@ -398,7 +403,7 @@ export class SlackReader extends LitElement {
           : html`
             <message-list
               .workspace=${this.selectedWorkspace}
-              .channel=${this.selectedChannel}
+              .channel=${selectedChannel || null}
               .messages=${this.messages}
             ></message-list>
           `}

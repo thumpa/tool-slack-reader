@@ -218,7 +218,14 @@ Key layout features:
    - Visual feedback for selected state
    - Updates based on selected workspace
 
-4. `message-list`: Message display component
+4. `channel-header`: Channel information display component
+   - Fixed positioning at top of message area
+   - Displays channel name with # prefix
+   - Shows channel topic/purpose from channels.json
+   - Channel Info button for detailed information
+   - Sticky behaviour during message scrolling
+
+5. `message-list`: Message display component
    - Chronological message rendering
    - Thread management:
      - Parent messages with distinct styling
@@ -231,7 +238,7 @@ Key layout features:
    - Reaction display
    - Auto-scroll to latest message
 
-5. `theme-switch`: Theme toggle component
+6. `theme-switch`: Theme toggle component
    - Switches between light and dark modes
    - Respects system preferences
    - Persists theme selection
@@ -266,7 +273,13 @@ For detailed implementation and styling information about UI components, see the
    - Message loading and parsing
    - Message caching for performance
 
-3. `ChannelMetadataService`: Channel metadata management service
+3. `ChannelService`: Channel data management service
+   - Loads and caches channel information from channels.json
+   - Provides channel details including topics and purposes
+   - Case-insensitive channel matching
+   - Efficient channel data retrieval
+
+4. `ChannelMetadataService`: Channel metadata management service
    - Efficient message counting with persistent caching
    - Automatic metadata loading on startup
    - Channel statistics persistence

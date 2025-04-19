@@ -3,6 +3,22 @@ import { customElement, property, state } from 'lit/decorators.js'
 import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import { UserService } from '../utils/user-service'
 import { EmojiService } from '../utils/emoji-service'
+import './channel-header'
+
+interface Channel {
+  id: string;
+  name: string;
+  topic: {
+    value: string;
+    creator: string;
+    last_set: number;
+  };
+  purpose: {
+    value: string;
+    creator: string;
+    last_set: number;
+  };
+}
 
 interface Reaction {
   name: string
@@ -98,6 +114,8 @@ export class MessageList extends LitElement {
   @state()
   private expandedThreads: Set<string> = new Set();
 
+  @property({ type: Object }) channel: Channel | null = null;
+
   private async loadData() {
     if (this._messages.length > 0 && this.workspace) {
       await Promise.all([
@@ -117,11 +135,15 @@ export class MessageList extends LitElement {
 
   static styles = css`
     :host {
-      display: block;
+      display: flex;
+      flex-direction: column;
       height: 100%;
+      overflow: hidden;
+    }
+
+    .messages {
+      flex: 1;
       overflow-y: auto;
-      overflow-x: hidden;
-      contain: strict;
       padding: 1rem;
       color: var(--text-primary);
     }
@@ -481,40 +503,43 @@ export class MessageList extends LitElement {
 
   render() {
     return html`
-      ${this._messages.map(message => {
-        const threadReplies = this._threadReplies.get(message.ts) || [];
-        const isThreadExpanded = this.expandedThreads.has(message.thread_ts || message.ts);
-        
-        return html`
-          <div class="message ${message.reply_count ? 'has-threads' : ''}">
-            <div class="message-header">
-              <span class="username">${this.getUserName(message.user)}</span>
-              <span class="timestamp">${this.formatTimestamp(message.ts)}</span>
-            </div>
-            ${this.renderThreadInfo(message)}
-            ${message.text ? html`
-              <div class="message-text">${unsafeHTML(this.processMessageText(message.text))}</div>
-            ` : null}
-            ${this.renderFileAttachments(message.files)}
-            ${this.renderReactions(message.reactions)}
-            ${isThreadExpanded && threadReplies.length > 0 ? html`
-              ${threadReplies.map(reply => html`
-                <div class="message thread-reply">
-                  <div class="message-header">
-                    <span class="username">${this.getUserName(reply.user)}</span>
-                    <span class="timestamp">${this.formatTimestamp(reply.ts)}</span>
+      <channel-header .channel=${this.channel} .workspace=${this.workspace}></channel-header>
+      <div class="messages">
+        ${this._messages.map(message => {
+          const threadReplies = this._threadReplies.get(message.ts) || [];
+          const isThreadExpanded = this.expandedThreads.has(message.thread_ts || message.ts);
+          
+          return html`
+            <div class="message ${message.reply_count ? 'has-threads' : ''}">
+              <div class="message-header">
+                <span class="username">${this.getUserName(message.user)}</span>
+                <span class="timestamp">${this.formatTimestamp(message.ts)}</span>
+              </div>
+              ${this.renderThreadInfo(message)}
+              ${message.text ? html`
+                <div class="message-text">${unsafeHTML(this.processMessageText(message.text))}</div>
+              ` : null}
+              ${this.renderFileAttachments(message.files)}
+              ${this.renderReactions(message.reactions)}
+              ${isThreadExpanded && threadReplies.length > 0 ? html`
+                ${threadReplies.map(reply => html`
+                  <div class="message thread-reply">
+                    <div class="message-header">
+                      <span class="username">${this.getUserName(reply.user)}</span>
+                      <span class="timestamp">${this.formatTimestamp(reply.ts)}</span>
+                    </div>
+                    ${reply.text ? html`
+                      <div class="message-text">${unsafeHTML(this.processMessageText(reply.text))}</div>
+                    ` : null}
+                    ${this.renderFileAttachments(reply.files)}
+                    ${this.renderReactions(reply.reactions)}
                   </div>
-                  ${reply.text ? html`
-                    <div class="message-text">${unsafeHTML(this.processMessageText(reply.text))}</div>
-                  ` : null}
-                  ${this.renderFileAttachments(reply.files)}
-                  ${this.renderReactions(reply.reactions)}
-                </div>
-              `)}
-            ` : null}
-          </div>
-        `;
-      })}
+                `)}
+              ` : null}
+            </div>
+          `;
+        })}
+      </div>
     `;
   }
 }
