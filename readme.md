@@ -1,6 +1,6 @@
 # Slack Export Viewer
 
-A browser-based viewer for Slack export data, built with Lit.
+A browser-based viewer for Slack export data, built with Lit. This application provides a modern, user-friendly interface for teams and individuals to access and review their historical Slack communications. It features a clean two-column layout with intuitive channel navigation, thread support with expandable views, user and channel information display, and automatic theme switching based on system preferences. The viewer is designed to make it easy to browse through exported Slack workspace data, with support for multiple workspaces, proper message formatting, and efficient data loading for optimal performance.
 
 ## Table of Contents
 
@@ -20,7 +20,8 @@ A browser-based viewer for Slack export data, built with Lit.
   - [5.6. Message Formatting](#56-message-formatting)
 - [6. Development](#6-development)
 - [7. References](#7-references)
-- [8. License](#8-license)
+- [8. AI Disclosure](#8-ai-disclosure)
+- [9. License](#9-license)
 
 ## 1. Features
 
@@ -491,6 +492,10 @@ Relevant Slack documentation:
 - [How to read Slack data exports](https://slack.com/intl/en-gb/help/articles/220556107-How-to-read-Slack-data-exports#json-files-1)
 - [Understanding Slack Messages](https://api.slack.com/surfaces/messages)
 
-## 8. License
+## 8. AI Disclosure
 
-[Add your license information here]
+This application was developed with assistance from artificial intelligence tools. While the initial concept, direction, and architectural decisions were human-driven, AI was utilised to help write and refine portions of the codebase. This collaboration between human and AI development approaches was chosen to enhance development efficiency while maintaining human oversight of the project's goals and quality standards.
+
+## 9. License
+
+This project is released under [The Unlicense](LICENSE), which allows anyone to freely use, modify, and distribute this software for any purpose. Note that this license applies only to the viewer application itself - all Slack workspace data, message content, and structural elements exported from Slack remain the intellectual property of Slack Technologies, LLC and their respective owners. This application makes no claim to ownership of Slack's original work or data structures.
