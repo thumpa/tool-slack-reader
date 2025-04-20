@@ -2,6 +2,8 @@
 
 A browser-based viewer for Slack export data, built with Lit. This application provides a modern, user-friendly interface for teams and individuals to access and review their historical Slack communications. It features a clean two-column layout with intuitive channel navigation, thread support with expandable views, user and channel information display, and automatic theme switching based on system preferences. The viewer is designed to make it easy to browse through exported Slack workspace data, with support for multiple workspaces, proper message formatting, and efficient data loading for optimal performance.
 
+![image](https://github.com/user-attachments/assets/a4851775-ed80-4f0b-8345-8a4e70f058c9)
+
 ## Table of Contents
 
 - [1. Features](#1-features)
